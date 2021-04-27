@@ -1,5 +1,13 @@
 import { useEffect } from "react";
-import { Nav, Logo, NavMenu, Login, UserImg } from "./header.styles";
+import {
+  Nav,
+  Logo,
+  NavMenu,
+  Login,
+  UserImg,
+  SignOut,
+  DropDown,
+} from "./header.styles";
 import { auth, provider } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -7,6 +15,7 @@ import {
   selectUserEmail,
   selectUserName,
   selectUserPhoto,
+  setSignOutState,
   setUserLoginDetails,
 } from "../../features/user/userSlice";
 
@@ -26,14 +35,26 @@ const Header = (props) => {
   }, [userName]);
 
   const handleAuth = () => {
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        setUser(result.user);
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+    if (!userName) {
+      auth
+        .signInWithPopup(provider)
+        .then((result) => {
+          setUser(result.user);
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    } else if (userName) {
+      auth
+        .signOut()
+        .then(() => {
+          dispatch(setSignOutState());
+          history.push("/");
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    }
   };
 
   const setUser = (user) => {
@@ -51,7 +72,7 @@ const Header = (props) => {
         <img src="/images/logo.svg" alt="Disney+" />
       </Logo>
       {!userName ? (
-        <Login onClick={handleAuth}></Login>
+        <Login onClick={handleAuth}>LOGIN</Login>
       ) : (
         <>
           <NavMenu>
@@ -80,7 +101,12 @@ const Header = (props) => {
               <span>SERIES</span>
             </a>
           </NavMenu>
-          <UserImg src={userPhoto} alt={userName} />
+          <SignOut>
+            <UserImg src={userPhoto} alt={userName} />
+            <DropDown>
+              <span onClick={handleAuth}>Sign Out</span>
+            </DropDown>
+          </SignOut>
         </>
       )}
     </Nav>
