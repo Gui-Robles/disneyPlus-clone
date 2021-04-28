@@ -5,7 +5,7 @@ export const Carousel = styled(Slider)`
   margin-top: 20px;
   & > button {
     opacity: 0;
-    height: 100%;
+    height: 100% !important;
     width: 5vw;
     z-index: 1;
     &:hover {
@@ -26,10 +26,12 @@ export const Carousel = styled(Slider)`
     overflow: initial;
   }
   .slick-prev {
-    left: -75px;
+    left: 2% !important;
+    z-index: 1;
   }
   .slick-next {
-    right: -75px;
+    right: 2% !important;
+    z-index: 1;
   }
 `;
 

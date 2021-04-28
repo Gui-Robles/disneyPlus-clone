@@ -10,6 +10,7 @@ const ImgSlider = (props) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
+    adaptiveHeight: true,
   };
   return (
     <Carousel {...settings}>
